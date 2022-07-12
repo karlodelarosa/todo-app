@@ -19,13 +19,13 @@ class LoginController extends CustomController
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
+            'name' => 'required|min:3',
+            'email' => 'required|unique:users|email',
+            'password' => 'required|min:8|confirmed'
         ]);
 
         try {
-            User::create($request->all());
+            User::create($request->except('password_confirmation'));
 
             return $this->sendResponse([], 'Successfully Sign up');
         } catch (\Throwable $t) {

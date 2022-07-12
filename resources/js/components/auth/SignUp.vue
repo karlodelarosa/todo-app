@@ -1,5 +1,10 @@
 <template>
     <form @submit.prevent="signUp()" class="mt-8 space-y-6" method="POST">
+        <error-alert v-if="!isEmptyErrors()">
+            <li v-for="(value, key) in errors">
+                {{ value }}
+            </li>
+        </error-alert>
         <input type="hidden" name="remember" value="true">
         <div class="rounded-md shadow-sm -space-y-px">
             <div>
@@ -14,6 +19,10 @@
                 <label for="password" class="sr-only">Password</label>
                 <input v-model="password" id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm" placeholder="Password">
             </div>
+            <div>
+                <label for="password_confirmation" class="sr-only">Confirm Password</label>
+                <input v-model="password_confirmation" id="password_confirmation" name="password_confirmation" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm" placeholder="Confirm Password">
+            </div>
         </div>
 
 
@@ -26,13 +35,21 @@
 </template>
 
 <script>
+import _ from "lodash";
+import ErrorAlert from "../atoms/ErrorAlert";
+
 export default {
     name: "SignUp",
+    components: {
+        ErrorAlert,
+    },
     data() {
         return {
             name: null,
             email: null,
             password: null,
+            password_confirmation: null,
+            errors: [],
         }
     },
     methods: {
@@ -40,7 +57,8 @@ export default {
             const params = {
                 name: this.name,
                 email: this.email,
-                password: this.password
+                password: this.password,
+                password_confirmation : this.password_confirmation
             }
 
             axios.post('/create-account', params)
@@ -48,9 +66,20 @@ export default {
                     console.log(response.data);
                 })
                 .catch (err => {
-                    console.error(err);
+                    console.info('catch', err);
+                    this.errors = [];
+                    let vm = this;
+                    _.map(Object.entries(err.response.data.errors), function (n, index) {
+                        console.info(n)
+                        vm.errors.push(n[1][0])
+                    })
+                    console.log(this.errors)
+
                 });
-        }
+        },
+        isEmptyErrors() {
+            return this.errors.length <= 0;
+        },
     }
 }
 </script>
