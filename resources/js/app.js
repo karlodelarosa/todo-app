@@ -2,10 +2,10 @@ import { createApp } from 'vue';
 
 require('./bootstrap');
 
-import HelloWorld from "./HelloWorld";
+import SignUp from "./components/auth/SignUp";
 
 createApp({
     components: {
-        HelloWorld
+        SignUp,
     }
 }).mount('#app')
