@@ -40,13 +40,6 @@ class LoginController extends CustomController
         }
     }
 
-
-//    /**
-//     * Handle an authentication attempt.
-//     *
-//     * @param  \Illuminate\Http\Request  $request
-//     * @return \Illuminate\Http\Response
-//     */
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([

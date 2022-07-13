@@ -39,7 +39,7 @@
 
                     <div class="px-5 py-4 flex justify-between">
                         <button @click="closeModal()" class="text-sm py-2 px-3 text-gray-500 hover:text-gray-600 transition duration-150">Close</button>
-                        <button @click="closeModal()" class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                        <button @click="saveTask()" class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
                     </div>
                 </div>
             </div>
@@ -50,6 +50,7 @@
 <script>
 import TaskList from "./TaskList";
 import {store} from "../state";
+import _ from "lodash";
 
 export default {
     name: "Task",
@@ -61,6 +62,7 @@ export default {
             isOpenModal: false,
             title: null,
             description: null,
+            errors: [],
         }
     },
     methods: {
@@ -69,7 +71,31 @@ export default {
         },
         closeModal() {
             this.isOpenModal = false;
-        }
+        },
+        async saveTask() {
+            const params = {
+                title: this.title,
+                description: this.description
+            }
+
+            await axios.post('/save-task', params)
+                .then(response => {
+                    console.log('im in then', response.data);
+                })
+                .catch (err => {
+                    console.info('catch', err);
+                    this.errors = [];
+                    let vm = this;
+                    _.map(Object.entries(err.response.data.errors), function (n, index) {
+                        console.info(n)
+                        vm.errors.push(n[1][0])
+                    })
+                    console.log(this.errors)
+
+                });
+
+            location.reload();
+        },
     }
 }
 </script>
