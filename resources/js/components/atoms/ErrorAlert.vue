@@ -1,5 +1,5 @@
 <template>
-    <div class="flex bg-red-100 rounded-lg p-4 mb-4 text-sm text-red-700" role="alert">
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-5 text-xs" role="alert">
         <ul class="list-disc pl-4">
             <slot></slot>
         </ul>

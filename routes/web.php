@@ -10,3 +10,6 @@ Route::get('/', function () {
 
 Route::get('/sign-up', [LoginController::class, 'signUp']);
 Route::post('/create-account', [LoginController::class, 'store']);
+
+Route::get('/sign-in', [LoginController::class, 'signIn']);
+Route::post('/login', [LoginController::class, 'authenticate']);

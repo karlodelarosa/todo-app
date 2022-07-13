@@ -16,6 +16,11 @@ class LoginController extends CustomController
         return view('auth.sign_up');
     }
 
+    public function signIn()
+    {
+        return view('auth.sign_in');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -34,27 +39,26 @@ class LoginController extends CustomController
             return $this->sendError(400, $t->getMessage());
         }
     }
+
+
 //    /**
 //     * Handle an authentication attempt.
 //     *
 //     * @param  \Illuminate\Http\Request  $request
 //     * @return \Illuminate\Http\Response
 //     */
-//    public function authenticate(Request $request)
-//    {
-//        $credentials = $request->validate([
-//            'email' => ['required', 'email'],
-//            'password' => ['required'],
-//        ]);
-//
-//        if (Auth::attempt($credentials)) {
-//            $request->session()->regenerate();
-//
-//            return redirect()->intended('dashboard');
-//        }
-//
-//        return back()->withErrors([
-//            'email' => 'The provided credentials do not match our records.',
-//        ]);
-//    }
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+        }
+
+        return back()->withErrors(['message' =>'The email or password that you entered is incorrect. Please try again.']);
+    }
 }
